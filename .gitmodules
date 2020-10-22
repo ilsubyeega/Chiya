@@ -1,0 +1,3 @@
+[submodule "submodules/osu-ppcalc"]
+	path = submodules/osu-ppcalc
+	url = https://github.com/ilsubyeega/osu-ppcalc
