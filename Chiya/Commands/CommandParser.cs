@@ -1,8 +1,6 @@
 ﻿using Chiya.Commands.Object;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Chiya.Commands
 {
@@ -15,7 +13,13 @@ namespace Chiya.Commands
 		{
 			string msg = message.Substring(1);
 			string command = msg.Split(' ')[0].ToLower();
-			string[] args = msg.Substring(command.Length).Split(" ");
+			string[] tmp = msg.Substring(command.Length).Split(" ");
+			string[] args = new string[tmp.Length - 1];
+			for (int i = 0; i < tmp.Length; i++)
+			{
+				if (i != 0)
+					args[i - 1] = tmp[i];
+			}
 			return Parse(new CommandArguments(username, command, args, isPrivate));
 		}
 		public CommandResult Parse(CommandArguments args)
@@ -23,7 +27,7 @@ namespace Chiya.Commands
 			Type type = GetCommandType(args.Label);
 			if (type == null)
 			{
-				
+
 				return new CommandResult()
 				{
 					Type = CommandResultType.MESSAGE,
@@ -48,7 +52,7 @@ namespace Chiya.Commands
 				};
 			}
 
-			
+
 		}
 		public Type GetCommandType(string label)
 		{

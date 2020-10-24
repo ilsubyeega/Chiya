@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chiya.Commands.Object
+﻿namespace Chiya.Commands.Object
 {
 	public class CommandArguments
 	{

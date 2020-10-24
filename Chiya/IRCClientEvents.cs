@@ -2,9 +2,8 @@
 using Chiya.Commands;
 using Chiya.Commands.Object;
 using Meebey.SmartIrc4net;
+using osu.PPCalc;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chiya
 {
@@ -27,11 +26,11 @@ namespace Chiya
 			irc.OnRawMessage += (object sender, IrcEventArgs e) =>
 			{
 				string raw = e.Data.RawMessage;
-				if (raw.Contains("JOIN") || raw.Contains("QUIT") || raw.Contains("End of /WHO list.") || raw.Contains("PART") ) return;
+				if (raw.Contains("JOIN") || raw.Contains("QUIT") || raw.Contains("End of /WHO list.") || raw.Contains("PART")) return;
 				Console.WriteLine("[RAW] " + raw);
 			};
 		}
-		
+
 		public void OnError(object sender, ErrorEventArgs e)
 		{
 			Console.WriteLine("Error: " + e.ErrorMessage);
@@ -48,7 +47,7 @@ namespace Chiya
 				{
 					case BanchoBotParseType.BEATMAP_CHANGED:
 						if (bparser.Result as string == "0") return; // Skip if map is not submitted.
-						// todo get beatmap object from beatmap id.
+																	 // todo get beatmap object from beatmap id.
 						irc.SendMessage(SendType.Message, e.Data.Channel, $"Bloodcat mirror: {new UrlMessage("here", $"https://bloodcat.com/osu/b/{bparser.Result as string}")}");
 						break;
 				}
@@ -78,17 +77,51 @@ namespace Chiya
 		public void OnQueryAction(object sender, IrcEventArgs e)
 		{
 			Console.WriteLine($"[PM-ACTION] {e.Data.Nick} : {e.Data.Message}");
+
 			// Check NowPlaying
 			if (NowPlayingParser.IsNowPlaying(e.Data.Message))
 			{
 				NowPlaying np = NowPlayingParser.Parse(e.Data.Message);
-				new CommandResult()
+				if (np.IsMapSet == true)
 				{
-					Type = CommandResultType.MESSAGE,
-					Result = $"Is Mapset: {np.IsMapSet} | Id: {np.Id}\n" +
-					$"{np.Beatmap} {np.Url}"
-				}.Send(irc, e.Data.Nick);
-			} else if (e.Data.Message.StartsWith("\u0001ACTION is listening to "))
+					new CommandResult()
+					{
+						Type = CommandResultType.MESSAGE,
+						Result = "Sorry. We cannot calculate the mapset."
+					}.Send(irc, e.Data.Nick);
+					return;
+				}
+				try
+				{
+					OsuCalculator calc = new OsuCalculator(np.Id);
+					CalculateMessage msg = new CalculateMessage(calc);
+					new CommandResult()
+					{
+						Type = CommandResultType.MESSAGE,
+						Result = msg.ToString()
+					}.Send(irc, e.Data.Nick);
+					BanchoUserHistory c = HistoryCache.Get(e.Data.Nick);
+					if (c == null)
+					{
+						HistoryCache.cache[e.Data.Nick] = new BanchoUserHistory(np.Id);
+					}
+					else
+					{
+						c.RecentBeatmapId = np.Id;
+					}
+				}
+				catch (Exception err)
+				{
+					new CommandResult()
+					{
+						Type = CommandResultType.MESSAGE,
+						Result = $"A Error found: {err.Message}"
+					}.Send(irc, e.Data.Nick);
+				}
+
+
+			}
+			else if (e.Data.Message.StartsWith("\u0001ACTION is listening to "))
 			{
 				new CommandResult()
 				{

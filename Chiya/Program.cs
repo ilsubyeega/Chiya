@@ -23,7 +23,7 @@ namespace Chiya
 				client.irc.RfcJoin(a);
 				Console.WriteLine($"Connecting to {a} ({a.Length})");
 			}
-				
+
 		}
 	}
 }

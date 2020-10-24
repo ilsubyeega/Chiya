@@ -1,14 +1,12 @@
 ﻿using Chiya.Bancho;
 using Chiya.Commands.Object;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Chiya.Commands
 {
 	public static class HelpCommand
 	{
-		public static new CommandResult Run(CommandArguments args)
+		public static CommandResult Run(CommandArguments args)
 		{
 			StringBuilder sb = new StringBuilder();
 			sb.Append("Hello! this is Chiya, made by ilsubyeega.\n");

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Web;
-
-namespace Chiya.Bancho
+﻿namespace Chiya.Bancho
 {
 	public class BanchoMessage
 	{

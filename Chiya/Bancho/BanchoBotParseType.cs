@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Chiya.Bancho
+﻿namespace Chiya.Bancho
 {
 	public enum BanchoBotParseType
 	{

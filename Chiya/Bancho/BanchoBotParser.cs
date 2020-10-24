@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Chiya.Bancho
 {
@@ -20,7 +18,7 @@ namespace Chiya.Bancho
 				RawMessage.EndsWith(")"))
 			{
 				string[] r1 = RawMessage.Split("(https://osu.ppy.sh/b/");
-				string r2 = r1[r1.Length-1];
+				string r2 = r1[r1.Length - 1];
 				string r3 = r2.Split(")")[0];
 				Type = BanchoBotParseType.BEATMAP_CHANGED;
 				Result = r3;

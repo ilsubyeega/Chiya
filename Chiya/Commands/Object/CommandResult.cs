@@ -1,7 +1,5 @@
 ﻿using Meebey.SmartIrc4net;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Chiya.Commands.Object
 {
@@ -15,6 +13,7 @@ namespace Chiya.Commands.Object
 			string[] rs = Result.Split("\n");
 			foreach (string r in rs)
 				irc.SendMessage(SendType.Message, username, r);
+			Task.Delay(10);
 		}
 	}
 	public enum CommandResultType
