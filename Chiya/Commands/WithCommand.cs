@@ -52,10 +52,15 @@ namespace Chiya.Commands
 			StringBuilder sb = new StringBuilder();
 			foreach (Mod mod in mods)
 				sb.Append(mod.Acronym);
+
+
+			OsuCalculator calc = new OsuCalculator(history.RecentBeatmapId);
+			calc.Mod = mods;
+			CalculateMessage msg = new CalculateMessage(calc);
 			CommandResult rs = new CommandResult
 			{
 				Type = CommandResultType.MESSAGE,
-				Result = "Applied Mods: +" + sb.ToString() + ". Try it by !acc [Accuracy]."
+				Result = msg.ToString().Split("\n")[1]
 			};
 			return rs;
 		}
