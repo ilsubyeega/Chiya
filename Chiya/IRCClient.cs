@@ -53,7 +53,14 @@ namespace Chiya
 			{
 				if (irc.IsConnected)
 				{
-					irc.Listen();
+					try
+					{
+						irc.Listen();
+					} catch (Exception e)
+					{
+						Console.WriteLine("Connection dead.");
+					}
+					
 					StartLoop(); // if thread dead, just do again uwu..
 				}
 				else
