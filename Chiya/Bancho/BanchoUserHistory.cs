@@ -11,6 +11,7 @@ namespace Chiya.Bancho
 		}
 		public int RecentBeatmapId = 0;
 		public int Acc = 100;
+		public short RecentMode = 0;
 		public Mod[] RecentMod = new Mod[] { };
 	}
 }

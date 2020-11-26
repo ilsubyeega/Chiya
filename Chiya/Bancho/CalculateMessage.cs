@@ -1,5 +1,8 @@
-﻿using osu.Game.Rulesets.Mods;
+﻿using osu.Game.Rulesets.Catch;
+using osu.Game.Rulesets.Mania;
+using osu.Game.Rulesets.Mods;
 using osu.Game.Rulesets.Osu;
+using osu.Game.Rulesets.Taiko;
 using osu.PPCalc;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +11,7 @@ namespace Chiya.Bancho
 {
 	public class CalculateMessage
 	{
-		private readonly static double[] CalcAcc = new double[] { 96, 98, 99, 100 };
+		private readonly static double[] CalcAcc = new double[] { 90, 95, 96, 98, 99, 100 };
 		private readonly static string format1 = "0.##";
 		public CalculateMessage(Calculator calc)
 		{
@@ -35,6 +38,12 @@ namespace Chiya.Bancho
 			string suffix = "";
 			if (Calculator.Ruleset is OsuRuleset)
 				suffix += OsuString();
+			else if (Calculator.Ruleset is TaikoRuleset)
+				suffix += TaikoString();
+			if (Calculator.Ruleset is CatchRuleset)
+				suffix += CatchString();
+			else if (Calculator.Ruleset is ManiaRuleset)
+				suffix += ManiaString();
 			string mods = "";
 			if (Calculator.Mod.Length > 0)
 			{
@@ -55,7 +64,7 @@ namespace Chiya.Bancho
 				}
 			}
 			string calc = (Acc == -1) ? CalcString() : CalcString(Acc);
-			return $"{Calculator.Beatmap.Metadata.Artist} - {Calculator.Beatmap.Metadata.Title} | {SR.ToString(format1)}★ | {suffix} | ⛏ {Calculator.Beatmap.Metadata.AuthorString} \n" +
+			return $"({Calculator.GetType()}) {SR.ToString(format1)} ★ | {Calculator.Beatmap.Metadata.Artist} - {Calculator.Beatmap.Metadata.Title} | {suffix} | ⛏ {Calculator.Beatmap.Metadata.AuthorString} \n" +
 					$"{mods} {calc}| Max Combo: {MaxCombo}x";
 		}
 		public string CalcString()
@@ -73,6 +82,8 @@ namespace Chiya.Bancho
 		public string CalcString(double acc)
 		{
 			Calculator.Accuracy = acc;
+			if (Calculator.Ruleset is ManiaRuleset)
+				Calculator.Score = (int)(10000 * acc);
 			var result = Calculator.Calculate();
 			return $"{acc}% : {result.Item2.ToString(format1)}pp ";
 		}
@@ -86,8 +97,35 @@ namespace Chiya.Bancho
 			Diffresult.TryGetValue("Aim Rating", out SpeedSR);
 			Diffresult.TryGetValue("AR", out AR);
 			Diffresult.TryGetValue("OD", out OD);
-			string k = $"AR {AR.ToString(format1)} | OD {OD.ToString(format1)} | {AimSR.ToString(format1)}★ᵃ | {SpeedSR.ToString(format1)}★ˢ";
-			return k;
+			return $"AR {AR.ToString(format1)} | OD {OD.ToString(format1)} | {AimSR.ToString(format1)}★ᵃ | {SpeedSR.ToString(format1)}★ˢ";
+		}
+		public string TaikoString()
+		{
+			double OD = -1;
+			double RhythmRating = -1;
+			double StaminaRating = -1;
+			double HitWindow = -1;
+			Diffresult.TryGetValue("OD", out OD);
+			Diffresult.TryGetValue("Rhythm Rating", out RhythmRating);
+			Diffresult.TryGetValue("Stamina Rating", out StaminaRating);
+			Diffresult.TryGetValue("Hit Window", out HitWindow);
+			return $"OD {OD.ToString(format1)} | {RhythmRating.ToString(format1)} ★ʳ | {StaminaRating.ToString(format1)} ★ˢ | {HitWindow.ToString(format1)} HW";
+		}
+		public string CatchString()
+		{
+			double AR = -1;
+			double OD = -1;
+			Diffresult.TryGetValue("AR", out AR);
+			Diffresult.TryGetValue("OD", out OD);
+			return $"AR {AR.ToString(format1)} | OD {OD.ToString(format1)}";
+		}
+		public string ManiaString()
+		{
+			double OD = -1;
+			double HitWindow = -1;
+			Diffresult.TryGetValue("OD", out OD);
+			Diffresult.TryGetValue("Hit Window", out HitWindow);
+			return $"OD {OD.ToString(format1)} | {HitWindow.ToString(format1)} HW";
 		}
 	}
 }

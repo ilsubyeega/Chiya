@@ -10,6 +10,14 @@ namespace Chiya.Test.Bancho
 	public class NpParseMods
 	{
 		[TestMethod]
+		public void GetModsStdNull()
+		{
+			string value = "ACTION is playing [https://osu.ppy.sh/b/2245774 Turbo - PADORU / PADORU [Gift]]";
+			var mods = NowPlayingParser.GetMods(value);
+			string[] excepted = { };
+			CollectionAssert.AreEqual(excepted, mods);
+		}
+		[TestMethod]
 		public void GetModsStd()
 		{
 			string value = "ACTION is playing [https://osu.ppy.sh/b/2129143 Nashimoto Ui - AaAaAaAAaAaAAa [aAaAaaAaAaaA]] +Hidden +DoubleTime";

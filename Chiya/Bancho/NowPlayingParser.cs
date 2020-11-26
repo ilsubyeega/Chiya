@@ -23,9 +23,10 @@ namespace Chiya.Bancho
 			var mode = GetMode(text);
 			np.Mods = mods;
 			np.Mode = mode;
+			np.NpType = GetNpType(text);
 			return np;
 		}
-		private static NowPlayingType GetNpType(string text)
+		public static NowPlayingType GetNpType(string text)
 		{
 			if (text.StartsWith("\u0001ACTION is listening to "))
 			{
@@ -57,6 +58,7 @@ namespace Chiya.Bancho
 		public static string[] GetMods(string text)
 		{
 			var tmp = text.Split("\u0001ACTION ")[1].Split(GetNpType(text).GetSplitValue() + " [")[1].Split(" ").Skip(1).Join(" ").Split("] ");
+			if (!tmp.Join(" ").Contains(" +")) return new string[] { };
 			var tmp_2 = tmp[tmp.Length-1].Split("\u0001")[0].Split("+");
 			List<String> value = new List<string>();
 			foreach (string _t in tmp_2)
@@ -106,6 +108,7 @@ namespace Chiya.Bancho
 		public bool IsMapSet; // if it is Mapset 1, if it is Map 0.
 		public int Id;
 		public string[] Mods = null;
+		public NowPlayingType NpType = NowPlayingType.NULL;
 		public short Mode = 0;
 	}
 }

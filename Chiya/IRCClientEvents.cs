@@ -1,7 +1,9 @@
 ﻿using Chiya.Bancho;
 using Chiya.Commands;
 using Chiya.Commands.Object;
+using Chiya.Utils;
 using Meebey.SmartIrc4net;
+using osu.Game.Rulesets.Mods;
 using osu.PPCalc;
 using System;
 
@@ -93,22 +95,37 @@ namespace Chiya
 				}
 				try
 				{
-					OsuCalculator calc = new OsuCalculator(np.Id);
+					BanchoUserHistory c = HistoryCache.Get(e.Data.Nick);
+					if (c == null)
+					{
+						c = new BanchoUserHistory(np.Id);
+						HistoryCache.cache[e.Data.Nick] = c;
+					}
+					short _mode = np.Mode == 0 && c.RecentMode == 0 ? (short)0 : np.Mode;
+					if (np.NpType == NowPlayingType.LISTENING)
+					{
+						_mode = c.RecentMode; // There is no mode in text.
+					}
+					
+					Calculator calc = LegacyUtil.GetCalculator(_mode, np.Id);
+					string[] mods = np.Mods;
+					if (!calc.IsConvertable())
+					{
+						// Fallback Calculator
+						calc = LegacyUtil.GetCalculator((short)calc.Beatmap.BeatmapInfo.RulesetID, np.Id);
+					}
+					
+					calc.Mod = Common.GetMods(mods, calc.Ruleset).ToArray();
 					CalculateMessage msg = new CalculateMessage(calc);
 					new CommandResult()
 					{
 						Type = CommandResultType.MESSAGE,
 						Result = msg.ToString()
 					}.Send(irc, e.Data.Nick);
-					BanchoUserHistory c = HistoryCache.Get(e.Data.Nick);
-					if (c == null)
-					{
-						HistoryCache.cache[e.Data.Nick] = new BanchoUserHistory(np.Id);
-					}
-					else
-					{
-						c.RecentBeatmapId = np.Id;
-					}
+					
+					c.RecentBeatmapId = np.Id;
+					c.RecentMode = np.Mode;
+					c.RecentMod = new Mod[] { };
 				}
 				catch (Exception err)
 				{
