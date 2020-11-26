@@ -8,7 +8,7 @@ namespace Chiya.Bancho
 {
 	public class CalculateMessage
 	{
-		private readonly static double[] CalcAcc = new double[] { 95, 96, 97, 98, 99, 100 };
+		private readonly static double[] CalcAcc = new double[] { 96, 98, 99, 100 };
 		private readonly static string format1 = "0.##";
 		public CalculateMessage(Calculator calc)
 		{
