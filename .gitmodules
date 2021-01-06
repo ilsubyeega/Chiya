@@ -4,3 +4,4 @@
 [submodule "submodules/osu"]
 	path = submodules/osu
 	url = https://github.com/ilsubyeega/osu
+	branch = ppcalc
