@@ -19,7 +19,8 @@ namespace Chiya.Commands
 			int max_combo = -1;
 			try
 			{
-				acc = double.Parse(args.Arguments[0]);
+				var accraw = double.Parse(args.Arguments[0]);
+				acc = accraw > 1 ? accraw : accraw/100;
 				miss = args.Arguments.Length > 1 ? int.Parse(args.Arguments[1]) : 0;
 				max_combo = args.Arguments.Length > 2 ? int.Parse(args.Arguments[2]) : -1;
 			}

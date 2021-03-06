@@ -11,7 +11,7 @@ namespace Chiya.Bancho
 {
 	public class CalculateMessage
 	{
-		private readonly static double[] CalcAcc = new double[] { 90, 95, 96, 98, 99, 100 };
+		private readonly static double[] CalcAcc = new double[] { 0.9, 0.95, 0.96, 0.98, 0.99, 1 };
 		private readonly static string format1 = "0.##";
 		public CalculateMessage(Calculator calc)
 		{
@@ -85,7 +85,7 @@ namespace Chiya.Bancho
 			if (Calculator.Ruleset is ManiaRuleset)
 				Calculator.Score = (int)(10000 * acc);
 			var result = Calculator.Calculate();
-			return $"{acc}% : {result.Item2.ToString(format1)}pp ";
+			return $"{(acc*100).ToString("N2")}% : {result.Item2.ToString(format1)}pp ";
 		}
 		public string OsuString()
 		{
