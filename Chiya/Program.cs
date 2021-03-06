@@ -12,17 +12,29 @@ namespace Chiya
 				Console.WriteLine("[ERR] CHIYA_AUTH Environment is not specified. (or invalid)");
 				return;
 			}
-			var client = new IRCClient();
-			string[] auth = s.Split("|");
-			client.name = auth[0];
-			client.password = auth[1];
-			client.Connect();
 			while (true)
+				TryRun(args, s);
+		}
+		static void TryRun(string[] args, string s)
+		{
+			try
 			{
-				String a = Console.ReadLine();
-				client.irc.RfcJoin(a);
-				Console.WriteLine($"Connecting to {a} ({a.Length})");
+				var client = new IRCClient();
+				string[] auth = s.Split("|");
+				client.name = auth[0];
+				client.password = auth[1];
+				client.Connect();
+				while (true)
+				{
+					String a = Console.ReadLine();
+					client.irc.RfcJoin(a);
+					Console.WriteLine($"Connecting to {a} ({a.Length})");
+				}
+			} catch
+			{
+				Console.WriteLine("asdf");
 			}
+			
 
 		}
 	}

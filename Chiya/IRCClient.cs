@@ -61,7 +61,7 @@ namespace Chiya
 						Console.WriteLine("Connection dead.");
 					}
 					
-					StartLoop(); // if thread dead, just do again uwu..
+					 // if thread dead, just do again uwu..
 				}
 				else
 				{
@@ -77,11 +77,10 @@ namespace Chiya
 					finally
 					{
 						irc.Listen();
-						StartLoop();
 					}
 
 				}
-
+				StartLoop();
 
 			}).Start();
 		}
