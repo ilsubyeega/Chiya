@@ -83,7 +83,7 @@ namespace Chiya.Bancho
 		{
 			Calculator.Accuracy = acc;
 			if (Calculator.Ruleset is ManiaRuleset)
-				Calculator.Score = (int)(10000 * acc);
+				Calculator.Score = (int)(10000 * acc * 100);
 			var result = Calculator.Calculate();
 			return $"{(acc*100).ToString("N2")}% : {result.Item2.ToString(format1)}pp ";
 		}
